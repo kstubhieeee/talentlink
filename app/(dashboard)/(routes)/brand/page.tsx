@@ -41,6 +41,7 @@ interface Brand {
   moneyOffered: string;
   sponsorshipAvailable: boolean;
   imageUrl: string;
+  role?: string;
 }
 
 export default function UserDashboard() {
@@ -59,6 +60,9 @@ export default function UserDashboard() {
   const [mobile, setMobile] = useState("");
   const [socialCount, setSocialCount] = useState("");
   const [socialLink, setSocialLink] = useState("");
+  const [role, setRole] = useState("");
+  const [description, setDescription] = useState("");
+  const [compensation, setCompensation] = useState("");
 
   useEffect(() => {
     const fetchBrands = async () => {
@@ -100,6 +104,9 @@ export default function UserDashboard() {
         mobile,
         socialCount,
         socialLink,
+        role: selectedBrand.role || "Brand Collaborator",
+        description: applicationMessage,
+        compensation: selectedBrand.moneyOffered,
       });
 
       if (response.status === 201) {
@@ -124,6 +131,9 @@ export default function UserDashboard() {
     setMobile("");
     setSocialCount("");
     setSocialLink("");
+    setRole("");
+    setDescription("");
+    setCompensation("");
   };
 
   if (!isLoaded) {
