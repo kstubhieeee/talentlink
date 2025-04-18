@@ -280,8 +280,7 @@ export default function ManagerDashboard() {
                     placeholder="$ Enter sponsorship amount"
                     className="bg-zinc-800/50 border-zinc-700 text-zinc-100 placeholder:text-zinc-500 focus:border-zinc-600 h-11 pl-7"
                   />
-                  <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 text-zinc-500 h-4 w-4" />
-                </div>
+                  </div>
                 <div className="flex items-center space-x-2">
                   <Checkbox
                     name="sponsorshipAvailable"
