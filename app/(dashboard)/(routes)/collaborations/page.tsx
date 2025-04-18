@@ -29,7 +29,11 @@ import {
   Laptop,
   HeartHandshake,
   BadgeCheck,
+  RefreshCcw,
+  Search,
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 
 // Brand logo mapping
 const brandLogos: { [key: string]: string } = {
@@ -135,27 +139,24 @@ const getStatusBadge = (status: string) => {
 
 export default function UserDashboard() {
   const [applications, setApplications] = useState<Application[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchApplications = async () => {
-      setLoading(true);
-      setError(null);
       try {
         const response = await axios.get("/api/application/fetch");
-        console.log("API Response:", response.data);
         if (response.data.success) {
-          setApplications(response.data.applications);
+          setApplications(response.data.applications || []);
         } else {
-          throw new Error(
-            response.data.message || "Failed to fetch applications"
-          );
+          throw new Error(response.data.message || "Failed to fetch applications");
         }
       } catch (err: any) {
         console.error("Error fetching applications:", err);
         setError(
           err.response?.data?.message ||
+          err.response?.data?.error ||
           err.message ||
           "An unexpected error occurred"
         );
@@ -189,9 +190,20 @@ export default function UserDashboard() {
                 <p className="text-zinc-400">Loading applications...</p>
               </div>
             ) : error ? (
-              <div className="flex items-center justify-center py-8 text-red-400">
-                <XCircle className="w-6 h-6 mr-2" />
-                <p>{error}</p>
+              <div className="flex flex-col items-center justify-center py-8 text-center">
+                <div className="p-4 rounded-full bg-red-500/10 mb-4">
+                  <XCircle className="w-8 h-8 text-red-500" />
+                </div>
+                <h3 className="text-xl font-semibold text-red-400 mb-2">Error Loading Applications</h3>
+                <p className="text-zinc-400 max-w-md">{error}</p>
+                <Button 
+                  variant="outline" 
+                  className="mt-4 border-zinc-700 hover:bg-zinc-800"
+                  onClick={() => window.location.reload()}
+                >
+                  <RefreshCcw className="w-4 h-4 mr-2" />
+                  Try Again
+                </Button>
               </div>
             ) : applications.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-12 text-center">
@@ -202,6 +214,14 @@ export default function UserDashboard() {
                 <p className="text-zinc-400 max-w-md">
                   You haven't submitted any applications yet. Start exploring brands and apply for sponsorships.
                 </p>
+                <Button 
+                  variant="outline" 
+                  className="mt-4 border-zinc-700 hover:bg-zinc-800"
+                  onClick={() => router.push('/brand')}
+                >
+                  <Search className="w-4 h-4 mr-2" />
+                  Explore Brands
+                </Button>
               </div>
             ) : (
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
